@@ -157,12 +157,12 @@ def upload_trajectory(cf, trajectory_id, trajectory):
 def run_sequence(cf, trajectory_id, duration):
     commander = cf.high_level_commander
 
-    commander.takeoff(0.5, 3.0)
+    commander.takeoff(1.0, 2.0)
     time.sleep(3.0)
     relative = True
-    #commander.start_trajectory(trajectory_id, 1.0, relative)
+    commander.start_trajectory(trajectory_id, 1.0, relative)
     time.sleep(duration)
-    commander.land(0.0, 4.0)
+    commander.land(0.0, 2.0)
     time.sleep(2)
     commander.stop()
 

@@ -25,7 +25,7 @@ class Player:
     def Add_Point(self):
         self.points += 1
   
-    def update_loc(sef, loc):
+    def update_loc(self, loc):
         self.location = loc
 
 def player_to_adversary_vector(player, adversary):

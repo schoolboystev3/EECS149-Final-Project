@@ -32,6 +32,9 @@ and how to send setpoints using the high level commander.
 """
 import time
 
+import file_reader as fr
+import player as pl
+
 import cflib.crtp
 from crazyflie_lib_python.cflib.crazyflie import Crazyflie
 from crazyflie_lib_python.cflib.crazyflie.log import LogConfig
@@ -42,6 +45,9 @@ from crazyflie_lib_python.cflib.crazyflie.syncLogger import SyncLogger
 
 # URI to the Crazyflie to connect to
 uri = 'radio://0/80/2M'
+
+HEIGHT = 0.2
+YAW = 0
 
 # The trajectory to fly
 # See https://github.com/whoenig/uav_trajectories for a tool to generate
@@ -153,16 +159,62 @@ def upload_trajectory(cf, trajectory_id, trajectory):
                                               len(trajectory_mem.poly4Ds))
     return total_duration
 
+def test_movement(cmdr):
+    relative = True
+    data = fr.test_format_data("test_movement.txt")
+    cmdr.go_to(data[0], data[1], 0.0, YAW, 1.0, relative) 
+
+def update_movement(cmdr, player, adversary):
+    relative = True
+    data = fr.format_data("test_sim_pos.txt")
+    player.update_loc(data[0])
+    adversary.update_loc(data[1])
+    x, y = pl.player_to_adversary_vector(player, adversary)
+    print(x)
+    print(y)
+    cmdr.go_to(x, y, 0.0, YAW, 1.0, relative) 
 
 def run_sequence(cf, trajectory_id, duration):
     commander = cf.high_level_commander
 
-    commander.takeoff(0.2, 0.5)
+    commander.takeoff(HEIGHT, 0.5)
     time.sleep(3.0)
+    
     relative = True
+    
     #commander.start_trajectory(trajectory_id, 1.0, relative)
+    """
     commander.go_to(0.5, 0, 0.0, 0.0, 1.0, relative) 
-    time.sleep(duration)
+    time.sleep(1.1)
+    commander.go_to(0, 0.5, 0.0, 0.0, 1.0, relative) 
+    time.sleep(1.1)
+    """
+
+    player = pl.Player()
+    adversary = pl.Player()
+
+    print('movement')
+
+
+    # simulate square movement
+
+    count = 0
+    f0 = open("test_sequence_sim.txt")
+    f1 = open("test_sim_pos", "w")
+     
+    while count < 4:
+        f1.write(f0.readline())
+        update_movement(commander, player, adversary)
+        count += 1
+        time.sleep(1.1)
+      
+
+    # update_movement(commander, player, adversary)
+    # time.sleep(1.1)
+
+    # test_movement(commander)
+    # time.sleep(1.1)
+
     commander.land(0.0, 0.5)
     time.sleep(2)
     commander.stop()
