@@ -34,6 +34,7 @@ import time
 
 import file_reader as fr
 import player as pl
+from pynput import keyboard
 from pynput.keyboard import Key, Listener
 
 import cflib.crtp
@@ -47,9 +48,9 @@ from crazyflie_lib_python.cflib.crazyflie.syncLogger import SyncLogger
 # URI to the Crazyflie to connect to
 uri = 'radio://0/80/2M'
 
-HEIGHT = 0.2
+HEIGHT = 0.5
 YAW = 0
-quit = True
+loop = True
 
 # The trajectory to fly
 # See https://github.com/whoenig/uav_trajectories for a tool to generate
@@ -179,8 +180,9 @@ def update_movement(cmdr, player, adversary):
 def on_press(key):
     print('{0} pressed'.format(key))
 
-def on_realease(key):
+def on_release(key):
     print('{0} release'.format(key))
+    global loop
     if key == Key.esc:
         loop = False
         return False
@@ -188,7 +190,8 @@ def on_realease(key):
 def run_sequence(cf, trajectory_id, duration):
     commander = cf.high_level_commander
 
-    commander.takeoff(HEIGHT, 0.5)
+    print('takeoff')
+    commander.takeoff(HEIGHT, 1)
     time.sleep(3.0)
     
     relative = True
@@ -208,11 +211,19 @@ def run_sequence(cf, trajectory_id, duration):
 
     count = 0
     f0 = open("test_sequence_sim.txt")
-    
-    while (loop and count < 10):
+ 
+    global loop
+
+    while (loop and count < 30):
+        new_cmd = f0.readline()
+        f1 = open("test_sim_pos.txt", "w")  
+        f1.write(new_cmd)
+        f1.close()
         update_movement(commander, player, adversary)
         count += 1
         time.sleep(1.1)
+   
+    f0.close()
     
     '''
     update_movement(commander, player, adversary)
@@ -229,7 +240,8 @@ def run_sequence(cf, trajectory_id, duration):
     # test_movement(commander)
     # time.sleep(1.1)
 
-    commander.land(0.0, 0.5)
+    print('landing')
+    commander.land(0.0, 1)
     time.sleep(2)
     commander.stop()
 
@@ -241,7 +253,6 @@ if __name__ == '__main__':
     with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
         cf = scf.cf
         trajectory_id = 1
-        loop = True
 
         listener = keyboard.Listener(on_press=on_press, on_release=on_release)
         listener.start()

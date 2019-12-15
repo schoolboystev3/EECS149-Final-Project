@@ -1,7 +1,8 @@
 import numpy as np
 import math
 
-pixel_to_distance = 1
+pixel_to_distance = 0.2
+close_limit = 0.1
 
 class Player:
     #location is a length two numpy array
@@ -32,7 +33,10 @@ class Player:
 
 def player_to_adversary_vector(player, adversary):
     direction = adversary.location - player.location
-    return direction * pixel_to_distance / np.linalg.norm(direction)
+    ret = direction * pixel_to_distance / np.linalg.norm(direction)
+    if (np.linalg.norm(ret) < close_limit):
+        return np.zeros(2)
+    return ret
 
 """
 yaw = 0
