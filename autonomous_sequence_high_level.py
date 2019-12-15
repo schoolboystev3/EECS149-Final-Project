@@ -201,13 +201,20 @@ def run_sequence(cf, trajectory_id, duration):
     count = 0
     f0 = open("test_sequence_sim.txt")
     f1 = open("test_sim_pos", "w")
-     
+    '''
     while count < 4:
-        f1.write(f0.readline())
+        #f1.write(f0.readline()) // Localization program will give us position of two drones
         update_movement(commander, player, adversary)
         count += 1
         time.sleep(1.1)
-      
+    '''
+    update_movement(commander, player, adversary)
+    f1.close()
+    print("--- %s ---" % (time.time() - start_time))
+    time.sleep(5)
+    update_movement(commander, player, adversary)
+    time.sleep(3)
+    
 
     # update_movement(commander, player, adversary)
     # time.sleep(1.1)
@@ -221,6 +228,7 @@ def run_sequence(cf, trajectory_id, duration):
 
 
 if __name__ == '__main__':
+    start_time = time.time()
     cflib.crtp.init_drivers(enable_debug_driver=False)
 
     with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
