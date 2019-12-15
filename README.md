@@ -15,11 +15,11 @@ TANDEM- Tactical Anti-Stealth Necessary Drone Evasive Maneuvers
 <code>pip3 install imutils</code>
 <h5>OpenCV</h5>
 <code>cd ~/work_dir;
-  git clone https://github.com/opencv/opencv.git
+  git clone https://github.com/opencv/opencv.git;
 </code>
 <code>
 mkdir build;
-cd build
+cd build;
 </code>
 <code>make -j7</code>
 
