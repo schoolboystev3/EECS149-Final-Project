@@ -15,11 +15,11 @@ TANDEM- Tactical Anti-Stealth Necessary Drone Evasive Maneuvers
 <code>pip3 install imutils</code>
 <h5>OpenCV</h5>
 <code>cd ~/work_dir;
-  git clone https://github.com/opencv/opencv.git;
+  git clone https://github.com/opencv/opencv.git
 </code>
 <code>
 mkdir build;
-cd build;
+cd build
 </code>
 <code>make -j7</code>
 
@@ -31,5 +31,15 @@ cd build;
 
 
 <h3>Use Example</h3>
-<code>python3 localizer.py</code>
-<p>This will open a video stream on USB port 1 (if feed is blank, try moving camera to different port), scan individual frames for QR codes, decode them, and finally process and write the relevant data to vector.txt. It should run continuously unless interrupted with ctrl-C on the CLI or by pressing q inside the video stream display.</p>
+<code>python3 image_collector.py</code>
+<p>This program opens a video stream from a camera plugged into PC's USB port 1 (just guess and check if feed is blank initially). It discretely and quickly updates environment.png in the same directory.</p>
+<code>python3 qr_scanner_image -i environment.png</code>
+<p>Repeatedly checks environment.png for updates. Scans image for QR codes, decodes them, and stores relevant data in vector.txt.</p>
+<p>The image collector needs to be running when you call the scanner. Both should run continuously throughout the demonstration, and should not exit on their own.</p>
+
+<code>python3 autonomous_sequence_high_level.py</code>
+<p>Running this program will result in:
+   <p> 1) Drone takeoff to <code>HEIGHT</code> </p>
+   <p> 2) Read the surveillance drone and adversary drone position from a text file and appropriately give the surveillance drone           trajectory </p>
+   <p> 3) Land the drone </p>
+</p>
