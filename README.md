@@ -28,3 +28,11 @@ cd build
 <code>pip3 install numpy</code>
 <h5>pyzbar</h5>
 <code>pip3 install pyzbar</code>
+
+
+<h3>Use Example</h3>
+<code>python3 image_collector.py</code>
+<p>This program opens a video stream from a camera plugged into PC's USB port 1 (just guess and check if feed is blank initially). It discretely and quickly updates environment.png in the same directory.</p>
+<code>python3 qr_scanner_image</code>
+<pRepeatedly checks environment.png for updates. Scans image for QR codes, decodes them, and stores relevant data in vector.txt.</p>
+<p>The image collector needs to be running when you call the scanner. Both should run continuously throughout the demonstration, and should not exit on their own.</p>
