@@ -1,6 +1,8 @@
 import numpy as np
 import math
 
+pixel_to_distance = 1
+
 class Player:
     #location is a length two numpy array
         
@@ -29,7 +31,9 @@ class Player:
         self.location = loc
 
 def player_to_adversary_vector(player, adversary):
-    return adversary.location - player.location
+    direction = adversary.location - player.location
+    return direction * pixel_to_distance / np.linalg.norm(direction)
+
 """
 yaw = 0
 height = 0.5
@@ -46,7 +50,6 @@ def loop(player, adversary, func):
         vector[0], vector[1] = player_to_adversary_vector(player, adversary)
         func(vector[0], vector[1], vector[2], vector[3])
         time.sleep(1)
-        
         
 player = Player()
 adversary = Player()

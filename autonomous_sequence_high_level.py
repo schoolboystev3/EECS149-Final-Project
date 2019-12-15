@@ -34,6 +34,7 @@ import time
 
 import file_reader as fr
 import player as pl
+from pynput.keyboard import Key, Listener
 
 import cflib.crtp
 from crazyflie_lib_python.cflib.crazyflie import Crazyflie
@@ -48,6 +49,7 @@ uri = 'radio://0/80/2M'
 
 HEIGHT = 0.2
 YAW = 0
+quit = True
 
 # The trajectory to fly
 # See https://github.com/whoenig/uav_trajectories for a tool to generate
@@ -174,6 +176,15 @@ def update_movement(cmdr, player, adversary):
     print(y)
     cmdr.go_to(x, y, 0.0, YAW, 1.0, relative) 
 
+def on_press(key):
+    print('{0} pressed'.format(key))
+
+def on_realease(key):
+    print('{0} release'.format(key))
+    if key == Key.esc:
+        loop = False
+        return False
+
 def run_sequence(cf, trajectory_id, duration):
     commander = cf.high_level_commander
 
@@ -195,18 +206,14 @@ def run_sequence(cf, trajectory_id, duration):
 
     print('movement')
 
-
-    # simulate square movement
-
     count = 0
     f0 = open("test_sequence_sim.txt")
-    f1 = open("test_sim_pos", "w")
-    '''
-    while count < 4:
-        #f1.write(f0.readline()) // Localization program will give us position of two drones
+    
+    while (loop and count < 10):
         update_movement(commander, player, adversary)
         count += 1
         time.sleep(1.1)
+    
     '''
     update_movement(commander, player, adversary)
     f1.close()
@@ -214,7 +221,7 @@ def run_sequence(cf, trajectory_id, duration):
     time.sleep(5)
     update_movement(commander, player, adversary)
     time.sleep(3)
-    
+    '''
 
     # update_movement(commander, player, adversary)
     # time.sleep(1.1)
@@ -234,6 +241,10 @@ if __name__ == '__main__':
     with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./cache')) as scf:
         cf = scf.cf
         trajectory_id = 1
+        loop = True
+
+        listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+        listener.start()
 
         activate_high_level_commander(cf)
         # activate_mellinger_controller(cf)
