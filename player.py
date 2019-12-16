@@ -9,9 +9,10 @@ class Player:
         
     def __init__(self, location = np.array([0,0])):
         self.location = location
-        self.points = 0
+        self.score = 0
         self.next_location = np.zeros(2)
         self.order_index = 0
+        self.rally_points = np.zeros(1)
         
     def Move_Player_To_Location(self,new_location):
         self.location = new_location
@@ -26,10 +27,13 @@ class Player:
         return self.Get_Distance_From_Location(adversary.location)
     
     def Add_Point(self):
-        self.points += 1
+        self.score += 1
   
     def update_loc(self, loc):
         self.location = loc
+
+    def set_rally_points(self, rally_points):
+        self.rally_points = rally_points
 
 def player_to_adversary_vector(player, adversary):
     direction = adversary.location - player.location

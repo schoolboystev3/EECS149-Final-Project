@@ -167,7 +167,7 @@ def test_movement(cmdr):
     data = fr.test_format_data("test_movement.txt")
     cmdr.go_to(data[0], data[1], 0.0, YAW, 1.0, relative) 
 
-def update_movement(cmdr, player, adversary):
+def update_movement(cmdr, player, adversary, rally_points):
     relative = True
     data = fr.format_data("test_sim_pos.txt")
     player.update_loc(data[0])
@@ -175,7 +175,18 @@ def update_movement(cmdr, player, adversary):
     x, y = pl.player_to_adversary_vector(player, adversary)
     print(x)
     print(y)
+    print(adversary.points)
     cmdr.go_to(x, y, 0.0, YAW, 1.0, relative) 
+
+def update_score(player, adversary):
+    for rp in player.rally_points:
+        if (np.linalg.norm(adversary.location - rp) < 50 
+            and np.linalg.norm(adversary.location - player.location > 0)):
+            adversary.Add_Point()
+            break
+    print("Adversary has scored " + adversary.score + " points")
+
+
 
 def on_press(key):
     print('{0} pressed'.format(key))
@@ -206,6 +217,7 @@ def run_sequence(cf, trajectory_id, duration):
 
     player = pl.Player()
     adversary = pl.Player()
+    player.set_rally_points(np.load("rally_points.npy"))
 
     print('movement')
 
@@ -220,6 +232,7 @@ def run_sequence(cf, trajectory_id, duration):
         f1.write(new_cmd)
         f1.close()
         update_movement(commander, player, adversary)
+        update_score(player, adversary)
         count += 1
         time.sleep(1.1)
    
