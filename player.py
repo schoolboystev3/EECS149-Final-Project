@@ -42,6 +42,23 @@ def player_to_adversary_vector(player, adversary):
         return np.zeros(2)
     return ret
 
+
+def go_to_random_rally_point(player):
+    print(player.next_location)
+    if(not player.next_location.all()):
+        player.next_location = player.rally_points[np.random.randint(0, len(player.rally_points))]
+
+        
+    
+    near_point = player.Get_Distance_From_Location(player.next_location) < 0.1
+    if not near_point:
+        direction = player.next_location - player.location
+        direction = direction
+        return direction
+    else:
+        player.next_location = np.zeros(2)
+        return player.next_location
+
 """
 yaw = 0
 height = 0.5

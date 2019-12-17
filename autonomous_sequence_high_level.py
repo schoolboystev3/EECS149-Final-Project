@@ -52,6 +52,7 @@ uri = 'radio://0/80/2M'
 HEIGHT = 0.5
 YAW = 0
 loop = True
+use_random_movement = True
 
 # The trajectory to fly
 # See https://github.com/whoenig/uav_trajectories for a tool to generate
@@ -173,7 +174,18 @@ def update_movement(cmdr, player, adversary):
     data = fr.format_data("test_sim_pos.txt")
     player.update_loc(data[0])
     adversary.update_loc(data[1])
-    x, y = pl.player_to_adversary_vector(player, adversary)
+    if not use_random_movement:
+        x, y = pl.player_to_adversary_vector(player, adversary)
+    else:
+        vector = pl.go_to_random_rally_point(player)
+        if np.linalg.norm(vector) < 0.1:
+            x = 0
+            y = 0
+        else:
+            vector = vector/np.linalg.norm(vector)/5
+            x = vector[0]
+            y = vector[1]
+
     print(x)
     print(y)
     cmdr.go_to(x, y, 0.0, YAW, 1.0, relative) 
