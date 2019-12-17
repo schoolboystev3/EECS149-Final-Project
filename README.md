@@ -10,7 +10,7 @@ TANDEM- Tactical Anti-Stealth Necessary Drone Evasive Maneuvers
           <li>pyzbar</li>
 </ul>
 
-<h4>Installation Instructions</h4>
+<h4>Installation Instructions for opencv</h4>
 <h5>imutils</h5>
 <code>pip3 install imutils</code>
 <h5>OpenCV</h5>
@@ -29,7 +29,13 @@ cd build
 <h5>pyzbar</h5>
 <code>pip3 install pyzbar</code>
 
-
+<h4>Installation Instructions for crazyflie</h4>
+<h5>pynput<h/5>
+  <code>pip3 install pynput</code>
+<h5>cflib<h/5>
+  <code>pip3 install cflib</code>
+                              
+                              
 <h3>Use Example</h3>
 <code>python3 image_collector.py</code>
 <p>This program opens a video stream from a camera plugged into PC's USB port 1 (just guess and check if feed is blank initially). It discretely and quickly updates environment.png in the same directory.</p>
