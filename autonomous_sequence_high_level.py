@@ -173,22 +173,27 @@ def test_movement(cmdr):
 def update_movement(cmdr, player, adversary):
     relative = True
     data = fr.format_data("test_sim_pos.txt")
-    player.update_loc(data[0])
+    #player.update_loc(data[0])
+    x = 0
+    y = 0
     adversary.update_loc(data[1])
     if not use_random_movement:
         x, y = pl.player_to_adversary_vector(player, adversary)
+   		player.Shift_Player(np.array[x,y])
     else:
         vector = pl.go_to_random_rally_point(player)
-        if np.linalg.norm(vector) < 0.1:
+        if np.linalg.norm(vector) < 0.3:
             x = 0
             y = 0
         else:
             vector = vector/np.linalg.norm(vector)/5
             x = vector[0]
             y = vector[1]
+            player.Shift_Player(vector)
 
     print(x)
     print(y)
+
     cmdr.go_to(x, y, 0.0, YAW, 1.0, relative) 
 
 def update_score(player, adversary):
@@ -233,6 +238,7 @@ def run_sequence(cf, trajectory_id, duration):
     player = pl.Player()
     adversary = pl.Player()
     player.set_rally_points(np.load("rally_points.npy"))
+    player.Move_Player_To_Location(np.array([1,1]))
 
     print('movement')
 
@@ -246,8 +252,10 @@ def run_sequence(cf, trajectory_id, duration):
         f1 = open("test_sim_pos.txt", "w")  
         f1.write(new_cmd)
         f1.close()
+        if(not use_random_movement and player.Get_Distance_From_Player(adversary) < 0.2):
+        	break
         update_movement(commander, player, adversary)
-        update_score(player, adversary)
+        #update_score(player, adversary)
         count += 1
         time.sleep(1.1)
    

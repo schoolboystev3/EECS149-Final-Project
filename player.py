@@ -50,7 +50,7 @@ def go_to_random_rally_point(player):
 
         
     
-    near_point = player.Get_Distance_From_Location(player.next_location) < 0.1
+    near_point = player.Get_Distance_From_Location(player.next_location) < 0.3
     if not near_point:
         direction = player.next_location - player.location
         direction = direction
