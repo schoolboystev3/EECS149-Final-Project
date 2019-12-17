@@ -179,7 +179,7 @@ def update_movement(cmdr, player, adversary):
     adversary.update_loc(data[1])
     if not use_random_movement:
         x, y = pl.player_to_adversary_vector(player, adversary)
-   		player.Shift_Player(np.array[x,y])
+        player.Shift_Player(np.array([x,y]))
     else:
         vector = pl.go_to_random_rally_point(player)
         if np.linalg.norm(vector) < 0.3:
@@ -249,9 +249,9 @@ def run_sequence(cf, trajectory_id, duration):
 
     while (loop and count < 30):
         new_cmd = f0.readline()
-        f1 = open("test_sim_pos.txt", "w")  
-        f1.write(new_cmd)
-        f1.close()
+        #f1 = open("test_sim_pos.txt", "w")  
+        #f1.write(new_cmd)
+        #f1.close()
         if(not use_random_movement and player.Get_Distance_From_Player(adversary) < 0.2):
         	break
         update_movement(commander, player, adversary)
