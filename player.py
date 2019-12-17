@@ -2,7 +2,7 @@ import numpy as np
 import math
 
 pixel_to_distance = 0.2
-close_limit = 0.1
+close_limit = 0.00001
 
 class Player:
     #location is a length two numpy array
