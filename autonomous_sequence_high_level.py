@@ -38,6 +38,7 @@ from pynput import keyboard
 from pynput.keyboard import Key, Listener
 import numpy as np
 
+import cflib
 import cflib.crtp
 from crazyflie_lib_python.cflib.crazyflie import Crazyflie
 from crazyflie_lib_python.cflib.crazyflie.log import LogConfig
