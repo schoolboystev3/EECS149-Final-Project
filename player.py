@@ -3,6 +3,9 @@ import math
 
 pixel_to_distance = 0.2
 close_limit = 0.0001
+# moving is limited to pixel_to_distance length movements so the closest the drone will ever be to
+# a destination is half that movement distance
+close = pixel_to_distance / 2
 
 class Player:
     #location is a length two numpy array
@@ -10,7 +13,7 @@ class Player:
     def __init__(self, location = np.array([0,0])):
         self.location = location
         self.score = 0
-        self.next_location = np.zeros(2)
+        self.next_location = np.array([])
         self.order_index = 0
         self.rally_points = np.zeros(1)
          
@@ -38,27 +41,26 @@ def get_dist_to_dest(player):
 def move_player(start, dest):
     direction = dest - start
     ret = direction * pixel_to_distance / np.linalg.norm(direction)
-    if (np.linalg.norm(ret) < close_limit):
+    if (np.linalg.norm(ret) < close):
         return np.zeros(2)
     return ret
 
 def player_to_adversary_vector(player, adversary):
-    return move_player(player.loc, adversary.loc)
+    return move_player(player.location, adversary.location)
 
 def go_to_random_rally_point(player):
-    print(player.next_location)
-    if(not player.next_location.all()):
+    # intialize next random location
+    if(player.next_location.size == 0):
         player.next_location = player.rally_points[np.random.randint(0, len(player.rally_points))]
-
-    # moving is limited to pixel_to_distance length movements so the closest the drone will ever be to
-    # a destination is half that movement distance
-    close = pixel_to_distance / 2
+    
     near_point = player.Get_Distance_From_Location(player.next_location) <= close
-    if not near_point:
-        return move_player(player.location, player.next_location)
-    else:
-        player.next_location = np.zeros(2)
-        return player.next_location
+    
+    if(near_point):
+        player.next_location = player.rally_points[np.random.randint(0, len(player.rally_points))]
+     
+    print(player.next_location)
+    
+    return move_player(player.location, player.next_location)
 
 """
 yaw = 0

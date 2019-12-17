@@ -53,7 +53,9 @@ uri = 'radio://0/80/2M'
 HEIGHT = 0.5
 YAW = 0
 loop = True
-use_random_movement = False
+use_random_movement = True
+#rap = "rally_points.npy"
+rap = "rally_points_two.npy"
 
 # The trajectory to fly
 # See https://github.com/whoenig/uav_trajectories for a tool to generate
@@ -232,7 +234,7 @@ def run_sequence(cf, trajectory_id, duration):
 
     player = pl.Player()
     adversary = pl.Player()
-    player.set_rally_points(np.load("rally_points.npy"))
+    player.set_rally_points(np.load(rap))
 
     print('movement')
 
@@ -241,7 +243,7 @@ def run_sequence(cf, trajectory_id, duration):
  
     global loop
 
-    while (loop and count < 30):
+    while (loop and count < 60):
         # new_cmd = f0.readline()
         #f1 = open("test_sim_pos.txt", "w")  
         #f1.write(new_cmd)
