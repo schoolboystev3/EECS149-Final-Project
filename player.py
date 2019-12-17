@@ -2,7 +2,7 @@ import numpy as np
 import math
 
 pixel_to_distance = 0.2
-close_limit = 0.00001
+close_limit = 0.0001
 
 class Player:
     #location is a length two numpy array
@@ -13,10 +13,7 @@ class Player:
         self.next_location = np.zeros(2)
         self.order_index = 0
         self.rally_points = np.zeros(1)
-        
-    def Move_Player_To_Location(self,new_location):
-        self.location = new_location
-        
+         
     def Shift_Player(self,shift_distance):
         self.location = np.add(self.location, shift_distance)
         
@@ -35,26 +32,30 @@ class Player:
     def set_rally_points(self, rally_points):
         self.rally_points = rally_points
 
-def player_to_adversary_vector(player, adversary):
-    direction = adversary.location - player.location
+def get_dist_to_dest(player):
+    return player.Get_Distance_From_Location(player.next_location)
+
+def move_player(start, dest):
+    direction = dest - start
     ret = direction * pixel_to_distance / np.linalg.norm(direction)
     if (np.linalg.norm(ret) < close_limit):
         return np.zeros(2)
     return ret
 
+def player_to_adversary_vector(player, adversary):
+    return move_player(player.loc, adversary.loc)
 
 def go_to_random_rally_point(player):
     print(player.next_location)
     if(not player.next_location.all()):
         player.next_location = player.rally_points[np.random.randint(0, len(player.rally_points))]
 
-        
-    
-    near_point = player.Get_Distance_From_Location(player.next_location) < 0.3
+    # moving is limited to pixel_to_distance length movements so the closest the drone will ever be to
+    # a destination is half that movement distance
+    close = pixel_to_distance / 2
+    near_point = player.Get_Distance_From_Location(player.next_location) <= close
     if not near_point:
-        direction = player.next_location - player.location
-        direction = direction
-        return direction
+        return move_player(player.location, player.next_location)
     else:
         player.next_location = np.zeros(2)
         return player.next_location
