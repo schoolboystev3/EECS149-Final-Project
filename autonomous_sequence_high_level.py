@@ -36,6 +36,7 @@ import file_reader as fr
 import player as pl
 from pynput import keyboard
 from pynput.keyboard import Key, Listener
+import numpy as np
 
 import cflib.crtp
 from crazyflie_lib_python.cflib.crazyflie import Crazyflie
@@ -167,7 +168,7 @@ def test_movement(cmdr):
     data = fr.test_format_data("test_movement.txt")
     cmdr.go_to(data[0], data[1], 0.0, YAW, 1.0, relative) 
 
-def update_movement(cmdr, player, adversary, rally_points):
+def update_movement(cmdr, player, adversary):
     relative = True
     data = fr.format_data("test_sim_pos.txt")
     player.update_loc(data[0])
@@ -175,16 +176,17 @@ def update_movement(cmdr, player, adversary, rally_points):
     x, y = pl.player_to_adversary_vector(player, adversary)
     print(x)
     print(y)
-    print(adversary.points)
     cmdr.go_to(x, y, 0.0, YAW, 1.0, relative) 
 
 def update_score(player, adversary):
     for rp in player.rally_points:
+        print(np.linalg.norm(adversary.location - player.location))
         if (np.linalg.norm(adversary.location - rp) < 50 
-            and np.linalg.norm(adversary.location - player.location > 0)):
+            and np.linalg.norm(adversary.location - player.location) > 0):
             adversary.Add_Point()
+
             break
-    print("Adversary has scored " + adversary.score + " points")
+    print("Adversary has scored " + str(adversary.score) + " points")
 
 
 
