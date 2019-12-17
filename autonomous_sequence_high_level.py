@@ -52,7 +52,7 @@ uri = 'radio://0/80/2M'
 HEIGHT = 0.5
 YAW = 0
 loop = True
-use_random_movement = True
+use_random_movement = False
 
 # The trajectory to fly
 # See https://github.com/whoenig/uav_trajectories for a tool to generate
